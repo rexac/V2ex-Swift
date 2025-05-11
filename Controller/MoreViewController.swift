@@ -80,20 +80,31 @@ class MoreViewController: UITableViewController {
             V2Client.sharedInstance.centerNavigation?.pushViewController(SettingsTableViewController(), animated: true)
         }
         else if indexPath.row == 3 {
-            let str = "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1078157349"
-            UIApplication.shared.open(URL(string: str)!)
+            guard let url = URL(string: "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1078157349") else { return }
+            openURL(url: url)
         }
         else if indexPath.row == 4 {
-            UIApplication.shared.open(URL(string: "https://day.app/2016/02/v2ex-ioske-hu-duan-bug-and-jian-yi/")!)
+            guard let url = URL(string: "https://day.app/2016/02/v2ex-ioske-hu-duan-bug-and-jian-yi/") else { return }
+            openURL(url: url)
         }
         else if indexPath.row == 5 {
             self.navigationController?.pushViewController(AgreementViewController(), animated: true)
         }
         else if indexPath.row == 7 {
-            UIApplication.shared.open(URL(string: "https://github.com/Finb/V2ex-Swift")!)
+            guard let url = URL(string: "https://github.com/Finb/V2ex-Swift") else { return }
+            openURL(url: url)
         }
         else if indexPath.row == 8 {
             V2Client.sharedInstance.centerNavigation?.pushViewController(PodsTableViewController(), animated: true)
+        }
+    }
+    
+    // 兼容iOS9和iOS10+
+    private func openURL(url: URL) {
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
         }
     }
 }

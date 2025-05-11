@@ -557,7 +557,9 @@ extension TopicDetailViewController: V2ActivityViewDataSource {
             activityController.excludedActivityTypes = [UIActivity.ActivityType.airDrop]
             self.navigationController?.present(activityController, animated: true, completion: nil)
         case .explore:
-            UIApplication.shared.open(URL(string: V2EXURL + "t/" + self.model!.topicId!)!)
+            if let url = URL(string: V2EXURL + "t/" + self.model!.topicId!) {
+                openURL(url: url)
+            }
         }
     }
     
@@ -568,6 +570,15 @@ extension TopicDetailViewController: V2ActivityViewDataSource {
             replyViewController.topicModel = self.model!
             let nav = V2EXNavigationController(rootViewController: replyViewController)
             self.navigationController?.present(nav, animated: true, completion: nil)
+        }
+    }
+    
+    // 兼容iOS9和iOS10+
+    private func openURL(url: URL) {
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
         }
     }
 }

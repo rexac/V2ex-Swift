@@ -30,10 +30,8 @@ class V2Photo :NSObject{
             return ;
         }
     
-        let resource = KF.ImageResource(downloadURL: self.url)
-        KingfisherManager.shared.cache.retrieveImage(forKey: resource.cacheKey, options: nil) { result -> () in
-            let image = try? result.get().image
-            
+        let resource = ImageResource(downloadURL: self.url)
+        KingfisherManager.shared.cache.retrieveImage(forKey: resource.cacheKey, options: nil) { (image, cacheType) -> () in
             if image != nil {
                 dispatch_sync_safely_main_queue({ () -> () in
                     self.imageLoadingComplete(image)
@@ -47,9 +45,8 @@ class V2Photo :NSObject{
                         "photo":self
                     ] as [String : Any]
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: V2Photo.V2PHOTO_PROGRESS_NOTIFICATION), object: dict)
-                    }){ result -> () in
-                        let image = try? result.get().image
-                        let originalData = try? result.get().originalData
+                    }){ (image, error, imageURL, originalData) -> () in
+                        
                         dispatch_sync_safely_main_queue({ () -> () in
                             self.imageLoadingComplete(image)
                         })
@@ -59,8 +56,6 @@ class V2Photo :NSObject{
                             KingfisherManager.shared.cache.store(image, original: originalData, forKey: resource.cacheKey, toDisk: true, completionHandler: nil)
                         }
                 }
-                
-                
             }
         }
     }

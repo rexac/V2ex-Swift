@@ -23,34 +23,34 @@ class CloudflareCheckingController: UIViewController, WKNavigationDelegate {
         self.webView.snp.makeConstraints{ (make) -> Void in
             make.edges.equalTo(self.view)
         }
-        self.webView.scrollView.contentInsetAdjustmentBehavior = .never
+        if #available(iOS 11.0, *) {
+            self.webView.scrollView.contentInsetAdjustmentBehavior = .never
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = false
+        }
         
         _ = self.webView.load(URLRequest(url: URL(string: V2EXURL)!))
     }
 
-    
     // Cloudflare 检查后设置 cookies
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+        let processCookies = { [weak self] (cookies: [HTTPCookie]) in
             for cookie in cookies {
                 HTTPCookieStorage.shared.setCookie(cookie)
             }
-            let LANGCookie = cookies.compactMap{ (cookie) -> HTTPCookie? in
-                if cookie.name == "V2EX_LANG" {
-                    return cookie
-                }
-                return nil
-            }.first
-            
-            // 有语言cookie，则证明检查通过
-            if LANGCookie != nil {
-                self.dismiss(animated: true) {[weak self] in
+            if let _ = cookies.first(where: { $0.name == "V2EX_LANG" }) {
+                self?.dismiss(animated: true) {
                     self?.completion?()
                 }
             }
-            
         }
 
+        if #available(iOS 11.0, *) {
+            self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies(processCookies)
+        } else {
+            if let cookies = HTTPCookieStorage.shared.cookies(for: URL(string: V2EXURL)!) {
+                processCookies(cookies)
+            }
+        }
     }
-
 }

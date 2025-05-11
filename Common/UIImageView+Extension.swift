@@ -26,23 +26,24 @@ extension UIImageView {
             
             self.image = placeholderImage
         
-            let resource = KF.ImageResource(downloadURL: URL)
+            let resource = ImageResource(downloadURL: URL)
             fin_setWebURL(resource.downloadURL)
-            KingfisherManager.shared.cache.retrieveImage(forKey: resource.cacheKey, options: nil) { result -> () in
-                let image = try? result.get().image
+            KingfisherManager.shared.cache.retrieveImage(forKey: resource.cacheKey, options: nil) { (image, cacheType) -> () in
                 if image != nil {
                     dispatch_sync_safely_main_queue({ () -> () in
                         self.image = image
                     })
                 }
                 else {
-                    KingfisherManager.shared.downloader.downloadImage(with: resource.downloadURL, options: nil, progressBlock: nil, completionHandler: { (result) -> () in
+                    KingfisherManager.shared.downloader.downloadImage(with: resource.downloadURL, options: nil, progressBlock: nil, completionHandler: { (image, error, imageURL, originalData) -> () in
+                        if let error = error , error.code == KingfisherError.notModified.rawValue {
+                            KingfisherManager.shared.cache.retrieveImage(forKey: resource.cacheKey, options: nil, completionHandler: { (cacheImage, cacheType) -> () in
+                                self.fin_setImage(cacheImage!, imageURL: imageURL!)
+                            })
+                            return
+                        }
                         
-                        switch result {
-                        case .success(let imageResult):
-                            let originalData = imageResult.originalData
-                            let imageURL = imageResult.url
-                            var image = imageResult.image
+                        if var image = image, let originalData = originalData {
                             //处理图片
                             if let img = imageModificationClosure?(image) {
                                 image = img
@@ -51,10 +52,7 @@ extension UIImageView {
                             //保存图片缓存
                             KingfisherManager.shared.cache.store(image, original: originalData, forKey: resource.cacheKey, toDisk: true, completionHandler: nil)
                             self.fin_setImage(image, imageURL: imageURL!)
-                        case .failure:
-                            break
                         }
-                        
                     })
                 }
             }

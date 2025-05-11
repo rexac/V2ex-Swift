@@ -77,7 +77,11 @@ class V2WebViewViewController: UIViewController ,V2WebViewProgressDelegate ,V2Ac
             make.right.bottom.left.equalTo(self.view)
             make.top.equalTo(NavigationBarHeight)
         }
-        self.webView!.scrollView.contentInsetAdjustmentBehavior = .never
+        if #available(iOS 11.0, *) {
+            self.webView!.scrollView.contentInsetAdjustmentBehavior = .never
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = false
+        }
         
         self.webViewProgressView = V2WebViewProgressView(frame: CGRect(x: 0, y: NavigationBarHeight, width: SCREEN_WIDTH, height: 2))
         self.view.addSubview(self.webViewProgressView!)
@@ -145,13 +149,20 @@ class V2WebViewViewController: UIViewController ,V2WebViewProgressDelegate ,V2Ac
         activityView.dismiss()
         if  let url = self.webView?.url {
             if url.absoluteString.Lenght > 0 {
-                UIApplication.shared.open(url)
+                openURL(url: url)
                 return;
             }
         }
         if let url = URL(string: self.url) {
-            UIApplication.shared.open(url)
+            openURL(url: url)
         }
-        
+    }
+    // 兼容iOS9和iOS10+
+    private func openURL(url: URL) {
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
     }
 }
