@@ -53,7 +53,7 @@ class NodeGroupModel: NSObject ,BaseHtmlModelProtocol{
         Alamofire.request(V2EXURL, headers: MOBILE_CLIENT_HEADERS).responseJiHtml { (response) in
             var groupArray : [NodeGroupModel] = []
             if let jiHtml = response .result.value{
-                if let nodes = jiHtml.xPath("//*[@id='Wrapper']/div/div[@class='box'][last()]/div/table/tr") {
+                if let nodes = jiHtml.xPath("//*[@id='Wrapper']//div/div[@class='box'][last()]/div/table/tr") {
                     for rootNode in nodes {
                         let group = NodeGroupModel(rootNode: rootNode)
                         groupArray.append(group)
