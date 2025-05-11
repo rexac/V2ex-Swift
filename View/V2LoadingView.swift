@@ -30,7 +30,7 @@ let noticeString = [
 ]
 
 class V2LoadingView: UIView {
-    var activityIndicatorView = UIActivityIndicatorView(style: .gray)
+    var activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     init (){
         super.init(frame:CGRect.zero)
         self.addSubview(self.activityIndicatorView)
@@ -55,10 +55,10 @@ class V2LoadingView: UIView {
         
         self.themeChangedHandler = {[weak self] (style) -> Void in
             if V2EXColor.sharedInstance.style == V2EXColor.V2EXColorStyleDefault {
-                self?.activityIndicatorView.style = .gray
+                self?.activityIndicatorView.activityIndicatorViewStyle = .gray
             }
             else{
-                self?.activityIndicatorView.style = .white
+                self?.activityIndicatorView.activityIndicatorViewStyle = .white
             }
         }
     }
@@ -72,7 +72,7 @@ class V2LoadingView: UIView {
     }
     
     func hide(){
-        self.superview?.bringSubviewToFront(self)
+        self.superview?.bringSubview(toFront: self)
 
         UIView.animate(withDuration: 0.2,
             animations: { () -> Void in

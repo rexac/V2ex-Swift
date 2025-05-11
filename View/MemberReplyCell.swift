@@ -42,7 +42,7 @@ class MemberReplyCell: UITableViewCell {
         return contentPanel
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         self.setup();
     }
@@ -53,14 +53,14 @@ class MemberReplyCell: UITableViewCell {
 
     func setup()->Void{
         self.selectionStyle = .none
-        
+
         self.contentView.addSubview(self.contentPanel)
         self.contentPanel.addSubview(self.detailLabel);
         self.contentPanel.addSubview(self.commentPanel);
         self.contentPanel.addSubview(self.commentLabel);
-        
+
         self.setupLayout()
-        
+
         let dropUpImageView = UIImageView()
         dropUpImageView.image = UIImage.imageUsedTemplateMode("ic_arrow_drop_up")
         dropUpImageView.contentMode = .scaleAspectFit
@@ -71,10 +71,10 @@ class MemberReplyCell: UITableViewCell {
             make.width.equalTo(10)
             make.height.equalTo(5)
         }
-        
+
         self.themeChangedHandler = {[weak self] _ in
             self?.backgroundColor = V2EXColor.colors.v2_backgroundColor
-            
+
             self?.detailLabel.textColor=V2EXColor.colors.v2_TopicListTitleColor;
             self?.commentLabel.textColor=V2EXColor.colors.v2_TopicListTitleColor;
             self?.commentPanel.backgroundColor = V2EXColor.colors.v2_backgroundColor

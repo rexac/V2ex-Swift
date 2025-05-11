@@ -9,7 +9,7 @@
 import UIKit
 
 class LogoutTableViewCell: UITableViewCell {
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         self.setup();
     }
@@ -18,7 +18,6 @@ class LogoutTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     func setup()->Void{
-        
 
         self.textLabel!.text = NSLocalizedString("logOut")
         self.textLabel!.textAlignment = .center
@@ -35,6 +34,6 @@ class LogoutTableViewCell: UITableViewCell {
             self?.textLabel!.textColor = V2EXColor.colors.v2_NoticePointColor
             separator.image = createImageWithColor(V2EXColor.colors.v2_SeparatorColor)
         }
-        
+
     }
 }

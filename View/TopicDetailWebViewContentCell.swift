@@ -49,7 +49,7 @@ class TopicDetailWebViewContentCell: UITableViewCell ,UIWebViewDelegate {
     }
     var tapImageInfo:TapImageInfo?
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         self.setup();
     }
@@ -64,6 +64,7 @@ class TopicDetailWebViewContentCell: UITableViewCell ,UIWebViewDelegate {
         self.contentWebView.snp.makeConstraints{ (make) -> Void in
             make.left.top.right.bottom.equalTo(self.contentView)
         }
+        
         self.themeChangedHandler = {[weak self] _ in
             //强制将 UIWebView 设置背景颜色
             //不然不管怎么设置背景颜色，这B一直是白色，非得我治治他
@@ -71,6 +72,7 @@ class TopicDetailWebViewContentCell: UITableViewCell ,UIWebViewDelegate {
                 view.backgroundColor = V2EXColor.colors.v2_CellWhiteBackgroundColor
             }
         }
+
         self.kvoController.observe(self.contentWebView.scrollView, keyPath: "contentSize", options: [.new]) {
             [weak self] (observe, observer, change) -> Void in
             if let weakSelf = self {
@@ -157,7 +159,7 @@ class TopicDetailWebViewContentCell: UITableViewCell ,UIWebViewDelegate {
         }
     }
     
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
+    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         //如果加载的是 自己load 的本地页面 则肯定放过啊
         if navigationType == .other {
             return true
@@ -185,7 +187,7 @@ extension TopicDetailWebViewContentCell : V2PhotoBrowserDelegate {
         let photo = V2Photo(url: URL(string: self.tapImageInfo!.url)!)
         return photo
     }
-    func guideContentModeInPhotoBrowser(_ photoBrowser: V2PhotoBrowser, index: Int) -> UIView.ContentMode {
+    func guideContentModeInPhotoBrowser(_ photoBrowser: V2PhotoBrowser, index: Int) -> UIViewContentMode {
         return .scaleAspectFit
     }
     func guideFrameInPhotoBrowser(_ photoBrowser: V2PhotoBrowser, index: Int) -> CGRect {

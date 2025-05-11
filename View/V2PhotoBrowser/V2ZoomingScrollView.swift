@@ -32,7 +32,7 @@ class V2ZoomingScrollView: UIScrollView ,V2TapDetectingImageViewDelegate , UIScr
         }
     }
     
-    fileprivate var loadingView = UIActivityIndicatorView(style: .white)
+    fileprivate var loadingView = UIActivityIndicatorView(activityIndicatorStyle: .white)
 
     weak var photoBrowser:V2PhotoBrowser?
 
@@ -50,7 +50,7 @@ class V2ZoomingScrollView: UIScrollView ,V2TapDetectingImageViewDelegate , UIScr
         self.delegate = self
         self.showsHorizontalScrollIndicator = false
         self.showsVerticalScrollIndicator = false
-        self.decelerationRate = UIScrollView.DecelerationRate.fast
+        self.decelerationRate = UIScrollViewDecelerationRateFast
         
         NotificationCenter.default.addObserver(self, selector: #selector(V2ZoomingScrollView.loadingDidEndNotification(_:)), name: NSNotification.Name(rawValue: V2Photo.V2PHOTO_LOADING_DID_END_NOTIFICATION), object: nil)
         self.photoBrowser = browser
@@ -254,7 +254,7 @@ class V2ZoomingScrollView: UIScrollView ,V2TapDetectingImageViewDelegate , UIScr
 extension V2ZoomingScrollView {
     @objc func imageLongPress(sender:UIGestureRecognizer){
         if sender.state == .began {
-            
+
             let controller = UIAlertController(title: "", message: "图片", preferredStyle: .actionSheet)
             controller.addAction(UIAlertAction(title: "保存图片", style: .default, handler: { [weak self] (_) in
                 self?.saveImage()
@@ -262,11 +262,11 @@ extension V2ZoomingScrollView {
             controller.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
             
             V2Client.sharedInstance.topNavigationController.presentedViewController?.present(controller, animated: true, completion: nil)
-            
+
         }
     }
     @objc private func saveImage(){
-        guard let image = photoImageView.image, let photo = self.photo, var imageData:Data = image.pngData() else {
+        guard let image = photoImageView.image, let photo = self.photo, var imageData = UIImagePNGRepresentation(image) else {
             return
         }
 
@@ -276,7 +276,7 @@ extension V2ZoomingScrollView {
             //拿一下原始Data数据，保存效果更佳~
             imageData = data
         }
-        
+
         func requestAuthorizationCompletion(status:PHAuthorizationStatus) {
             if status == .authorized {
                 PHPhotoLibrary.shared().performChanges({
@@ -297,15 +297,9 @@ extension V2ZoomingScrollView {
                 V2Error("无法保存，无权限访问相册")
             }
         }
-        
-        if #available(iOS 14, *) {
-            PHPhotoLibrary.requestAuthorization(for: .addOnly) { (status) in
-                requestAuthorizationCompletion(status: status)
-            }
-        } else {
-            PHPhotoLibrary.requestAuthorization { (status) in
-                requestAuthorizationCompletion(status: status)
-            }
+
+        PHPhotoLibrary.requestAuthorization { (status) in
+            requestAuthorizationCompletion(status: status)
         }
     }
 }

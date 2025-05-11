@@ -15,9 +15,6 @@ class SettingsTableViewController: UITableViewController {
         self.title = NSLocalizedString("viewOptions")
 
         self.tableView.separatorStyle = .none
-        if #available(iOS 15.0, *) {
-            tableView.sectionHeaderTopPadding = 0.0
-        }
         regClass(self.tableView, cell: BaseDetailTableViewCell.self)
         regClass(self.tableView, cell: FontSizeSliderTableViewCell.self)
         regClass(self.tableView, cell: FontDisplayTableViewCell.self)
@@ -51,12 +48,7 @@ class SettingsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
             if indexPath.row == 0 {
-                if #available(iOS 13.0, *) {
-                    return 44
-                }
-                else{
-                    return 0
-                }
+                return 0
             }
             return 44
         }
@@ -78,7 +70,7 @@ class SettingsTableViewController: UITableViewController {
                 index = 0
             }
             cell.detailLabel.text = index == indexPath.row ? NSLocalizedString("current") : ""
-            
+
             return cell
         }
         

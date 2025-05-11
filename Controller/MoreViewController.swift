@@ -14,7 +14,7 @@ class MoreViewController: UITableViewController {
         
         self.title = NSLocalizedString("more")
         
-        self.tableView.separatorStyle = .none;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none;
         regClass(self.tableView, cell: BaseDetailTableViewCell.self)
         
         self.themeChangedHandler = {[weak self] (style) -> Void in
@@ -80,31 +80,20 @@ class MoreViewController: UITableViewController {
             V2Client.sharedInstance.centerNavigation?.pushViewController(SettingsTableViewController(), animated: true)
         }
         else if indexPath.row == 3 {
-            guard let url = URL(string: "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1078157349") else { return }
-            openURL(url: url)
+            let str = "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1078157349"
+            UIApplication.shared.openURL(URL(string: str)!)
         }
         else if indexPath.row == 4 {
-            guard let url = URL(string: "https://day.app/2016/02/v2ex-ioske-hu-duan-bug-and-jian-yi/") else { return }
-            openURL(url: url)
+            UIApplication.shared.openURL(URL(string: "https://day.app/2016/02/v2ex-ioske-hu-duan-bug-and-jian-yi/")!)
         }
         else if indexPath.row == 5 {
             self.navigationController?.pushViewController(AgreementViewController(), animated: true)
         }
         else if indexPath.row == 7 {
-            guard let url = URL(string: "https://github.com/Finb/V2ex-Swift") else { return }
-            openURL(url: url)
+            UIApplication.shared.openURL(URL(string: "https://github.com/Finb/V2ex-Swift")!)
         }
         else if indexPath.row == 8 {
             V2Client.sharedInstance.centerNavigation?.pushViewController(PodsTableViewController(), animated: true)
-        }
-    }
-    
-    // 兼容iOS9和iOS10+
-    private func openURL(url: URL) {
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url)
         }
     }
 }

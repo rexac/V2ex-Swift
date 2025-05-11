@@ -16,7 +16,7 @@ class FavoritesViewController: BaseViewController,UITableViewDataSource,UITableV
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.cancelEstimatedHeight()
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         regClass(tableView, cell: HomeTopicListTableViewCell.self)
         
@@ -45,7 +45,7 @@ class FavoritesViewController: BaseViewController,UITableViewDataSource,UITableV
             })
         footer?.centerOffset = -4
         self.tableView.mj_footer = footer
-        
+
         self.themeChangedHandler = {[weak self] _ in
             self?.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
             self?.tableView.backgroundColor = V2EXColor.colors.v2_backgroundColor

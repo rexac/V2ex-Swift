@@ -49,7 +49,7 @@ class MemberTopicCell: UITableViewCell {
         let contentPanel = UIView();
         return contentPanel
     }()
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         self.setup();
     }
@@ -59,7 +59,6 @@ class MemberTopicCell: UITableViewCell {
     }
     func setup()->Void{
         self.selectionStyle = .none
-        
 
         self.contentView .addSubview(self.contentPanel);
         self.contentPanel.addSubview(self.dateAndLastPostUserLabel);
@@ -73,18 +72,18 @@ class MemberTopicCell: UITableViewCell {
         self.themeChangedHandler = {[weak self] _ in
             self?.contentPanel.backgroundColor =  V2EXColor.colors.v2_CellWhiteBackgroundColor
             self?.backgroundColor = V2EXColor.colors.v2_backgroundColor
-            
+
             self?.dateAndLastPostUserLabel.textColor=V2EXColor.colors.v2_TopicListDateColor;
             self?.replyCountLabel.textColor = V2EXColor.colors.v2_TopicListDateColor
             self?.nodeNameLabel.textColor = V2EXColor.colors.v2_TopicListDateColor
             self?.nodeNameLabel.backgroundColor = V2EXColor.colors.v2_NodeBackgroundColor
             self?.topicTitleLabel.textColor=V2EXColor.colors.v2_TopicListTitleColor;
-            
+
             self?.dateAndLastPostUserLabel.backgroundColor = self?.contentPanel.backgroundColor
             self?.replyCountLabel.backgroundColor = self?.contentPanel.backgroundColor
             self?.replyCountIconImageView.backgroundColor = self?.contentPanel.backgroundColor
             self?.topicTitleLabel.backgroundColor = self?.contentPanel.backgroundColor
-            
+
         }
     }
     

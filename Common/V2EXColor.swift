@@ -283,61 +283,35 @@ class V2EXColor :NSObject  {
     @objc dynamic private var _style:String
     var style:String {
         get {
-            if isFollowSystem {
-                return V2EXColor.systemStyle
-            }
             return _style
         }
         set{
             _style = newValue
         }
     }
-    static var systemStyle:String {
-        get {
-            if #available(iOS 13.0, *) {
-                let style = V2Client.sharedInstance.window?.traitCollection.userInterfaceStyle ?? UIUserInterfaceStyle.unspecified
-                if style == UIUserInterfaceStyle.light {
-                    return V2EXColor.V2EXColorStyleDefault
-                }
-                else if style == UIUserInterfaceStyle.dark {
-                    return V2EXColor.V2EXColorStyleDark
-                }
-            }
-            return V2EXColor.V2EXColorStyleDefault
-        }
-    }
     var isFollowSystem: Bool {
         didSet{
-            Settings[V2EXColor.ISFOLLOWSYSTEM_KEY] = isFollowSystem
+            Settings[V2EXColor.ISFOLLOWSYSTEM_KEY] = "\(isFollowSystem)"
             refreshColorStyle()
         }
     }
     static let sharedInstance = V2EXColor()
     fileprivate override init(){
-        
-        var isFollowSystem  = false
-        if let value:Bool = Settings[V2EXColor.ISFOLLOWSYSTEM_KEY] {
-            isFollowSystem = value
+        if let style:String = Settings[V2EXColor.STYLE_KEY] {
+            self._style = style
         }
         else{
-            if #available(iOS 13.0, *) {
-                isFollowSystem = true
-            }
+            self._style = V2EXColor.V2EXColorStyleDefault
         }
-        self.isFollowSystem = isFollowSystem
         
-        if isFollowSystem {
-            self._style = V2EXColor.systemStyle
+        if let value = Settings[V2EXColor.ISFOLLOWSYSTEM_KEY],
+           let boolValue = Bool(value) {
+            self.isFollowSystem = boolValue
         }
         else{
-            if let style:String = Settings[V2EXColor.STYLE_KEY] {
-                self._style = style
-            }
-            else{
-                self._style = V2EXColor.V2EXColorStyleDefault
-            }
+            self.isFollowSystem = false
         }
-        
+
         super.init()
     }
     func setStyleAndSave(_ style:String){
@@ -355,7 +329,7 @@ class V2EXColor :NSObject  {
         self.style = style
         V2EXSettings.sharedInstance[V2EXColor.STYLE_KEY] = style
     }
-    
+
     func refreshColorStyle() {
         if self.style == V2EXColor.V2EXColorStyleDefault {
             V2EXColor.colors = V2EXDefaultColor.sharedInstance
@@ -365,17 +339,8 @@ class V2EXColor :NSObject  {
         }
         
         //原样赋值，触发主题更改事件
-        self._style = self.style
-    }
-    var needsRefreshStyle:Bool {
-        get {
-            return self.style != self._style;
-        }
-    }
-    func refreshStyleIfNeeded() {
-        if self.isFollowSystem && self.needsRefreshStyle{
-            self.refreshColorStyle()
-        }
+        let style = self._style
+        self._style = style
     }
 }
 

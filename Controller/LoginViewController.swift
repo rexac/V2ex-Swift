@@ -280,13 +280,8 @@ extension LoginViewController {
 
         self.frostedView.frame = self.view.frame
         self.view.addSubview(self.frostedView)
-        
-        var blurEffect:UIBlurEffect.Style = .dark
-        if #available(iOS 13.0, *) {
-            blurEffect = .systemUltraThinMaterialDark
-        }
-        
-        let vibrancy = UIVibrancyEffect(blurEffect: UIBlurEffect(style: blurEffect))
+
+        let vibrancy = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .dark))
         let vibrancyView = UIVisualEffectView(effect: vibrancy)
         vibrancyView.isUserInteractionEnabled = true
         vibrancyView.frame = self.frostedView.frame
@@ -346,7 +341,7 @@ extension LoginViewController {
         }
         self.codeImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(refreshCode)))
         
-        self.loginButton.setTitle("登  录", for: .normal)
+        self.loginButton.setTitle("登  录", for: UIControlState())
         self.loginButton.titleLabel!.font = v2Font(20)
         self.loginButton.layer.cornerRadius = 3;
         self.loginButton.layer.borderWidth = 0.5
@@ -385,7 +380,7 @@ extension LoginViewController {
         }
 
         self.cancelButton.contentMode = .center
-        cancelButton .setImage(UIImage(named: "ic_cancel")!.withRenderingMode(.alwaysTemplate), for: .normal)
+        cancelButton .setImage(UIImage(named: "ic_cancel")!.withRenderingMode(.alwaysTemplate), for: UIControlState())
         vibrancyView.contentView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints{ (make) -> Void in
             make.centerY.equalTo(footLabel)

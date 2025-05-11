@@ -45,11 +45,7 @@ class V2EXNavigationController: UINavigationController {
     override var preferredStatusBarStyle: UIStatusBarStyle{
         get {
             if V2EXColor.sharedInstance.style == V2EXColor.V2EXColorStyleDefault {
-                if #available(iOS 13.0, *) {
-                    return .darkContent
-                } else {
-                    return .default
-                }
+                return .default
             }
             else{
                 return .lightContent
@@ -67,15 +63,19 @@ class V2EXNavigationController: UINavigationController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if V2EXColor.sharedInstance.isFollowSystem {
+            V2EXColor.sharedInstance.refreshColorStyle()
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 13.0, *) {
-            self.overrideUserInterfaceStyle = .light
-        }
+
         self.navigationBar.setBackgroundImage(createImageWithColor(UIColor.clear), for: .default)
 
         let maskingView = UIView()
-        
+
         maskingView.isUserInteractionEnabled = false
         self.navigationBar.superview!.insertSubview(maskingView, belowSubview: self.navigationBar)
         maskingView.frame = CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: NavigationBarHeight)
@@ -95,18 +95,13 @@ class V2EXNavigationController: UINavigationController {
             self?.navigationBar.tintColor = V2EXColor.colors.v2_navigationBarTintColor
             
             self?.navigationBar.titleTextAttributes = [
-                NSAttributedString.Key.font : v2Font(18),
-                NSAttributedString.Key.foregroundColor : V2EXColor.colors.v2_TopicListTitleColor
+                NSAttributedStringKey.font : v2Font(18),
+                NSAttributedStringKey.foregroundColor : V2EXColor.colors.v2_TopicListTitleColor
             ]
             
             if V2EXColor.sharedInstance.style == V2EXColor.V2EXColorStyleDefault {
                 maskingView.backgroundColor = UIColor(white: 0, alpha: 0.0);
-                if #available(iOS 13.0, *) {
-                    self?.frostedView.overrideUserInterfaceStyle = .light
-                } else {
-                    self?.frostedView.barStyle = .default
-                }
-
+                self?.frostedView.barStyle = .default
                 
                 //全局键盘颜色
                 UITextField.appearance().keyboardAppearance = .light
@@ -114,15 +109,11 @@ class V2EXNavigationController: UINavigationController {
             }
             else{
                 maskingView.backgroundColor = UIColor(white: 0, alpha: 0.6);
-                if #available(iOS 13.0, *) {
-                    self?.frostedView.overrideUserInterfaceStyle = .dark
-                } else {
-                    self?.frostedView.barStyle = .black
-                }
+                self?.frostedView.barStyle = .black
                 
                 UITextField.appearance().keyboardAppearance = .dark
             }
-            
+
             self?.setNeedsStatusBarAppearanceUpdate()
         }
     }

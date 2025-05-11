@@ -16,7 +16,7 @@ class HitTestSlopImageView: UIImageView {
             return super.point(inside: point, with:event)
         }
         else{
-            return self.bounds.inset(by: hitTestSlop).contains(point)
+            return UIEdgeInsetsInsetRect(self.bounds, hitTestSlop).contains(point)
         }
     }
     

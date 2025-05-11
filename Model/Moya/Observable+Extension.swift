@@ -52,7 +52,7 @@ extension Observable where Element: Moya.Response {
             if 503 == response.statusCode {
                 if let jiHtml = Ji(htmlData: response.data) {
                     if let titleNode = jiHtml.xPath("/html/head/title")?.first , let content = titleNode.content, content.hasPrefix("Just a moment") {
-                        throw ApiError.needsCloudflareChecking(info: "需要Cloudflare检查")
+                         throw ApiError.needsCloudflareChecking(info: "需要Cloudflare检查")
                     }
                 }
             }

@@ -31,8 +31,8 @@ class WritingViewController: UIViewController ,UITextViewDelegate {
 
         let rightButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         rightButton.contentMode = .center
-        rightButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -20)
-        rightButton.setImage(UIImage(named: "ic_send")!.withRenderingMode(.alwaysTemplate), for: .normal)
+        rightButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -20)
+        rightButton.setImage(UIImage(named: "ic_send")!.withRenderingMode(.alwaysTemplate), for: UIControlState())
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightButton)
         rightButton.addTarget(self, action: #selector(WritingViewController.rightClick), for: .touchUpInside)
         
@@ -43,22 +43,26 @@ class WritingViewController: UIViewController ,UITextViewDelegate {
         self.textView.snp.makeConstraints{ (make) -> Void in
             make.top.right.bottom.left.equalTo(self.view)
         }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+
     }
-    @objc func keyboardWillChangeFrame(notification: Notification) {
-        guard let bound = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
-            return
-        }
-        self.textView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bound.size.height, right: 0)
-    }
+    
     @objc func leftClick (){
         self.dismiss(animated: true, completion: nil)
     }
     @objc func rightClick (){
-        
-    }
 
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if textView.attributedText.yy_attribute("someoneEnd", at: UInt(range.location)) != nil && text.Lenght <= 0 {
+            //删除@
+            let atRange = (textView.attributedText.string as NSString).range(of: "@", options: .backwards)
+            if atRange.location != NSNotFound {
+                self.textView.replace(YYTextRange(range: NSRange(location: atRange.location, length: range.location + range.length)), withText: "")
+            }
+        }
+        return true
+    }
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.Lenght == 0{
             textView.textColor = V2EXColor.colors.v2_TopicListUserNameColor
@@ -77,9 +81,9 @@ class ReplyingViewController:WritingViewController {
             str.yy_color = self.textView.textColor
             str.yy_setColor(colorWith255RGB(0, g: 132, b: 255), range: NSMakeRange(0, str.length - 1))
             str.yy_setAttribute("someoneEnd", value: 1, range:NSMakeRange(str.length - 1, 1))
-            
+
             self.textView.attributedText = str
-            
+
             self.textView.selectedRange = NSMakeRange(str.length, 0);
         }
     }
@@ -92,6 +96,7 @@ class ReplyingViewController:WritingViewController {
         guard let text = self.textView.text, text.Lenght > 0 else {
             return
         }
+
         V2ProgressHUD.showWithClearMask()
         TopicCommentModel.replyWithTopicId(self.topicModel!, content: text ) {
             (response) in

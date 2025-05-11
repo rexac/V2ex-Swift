@@ -39,7 +39,7 @@ class HomeViewController: UIViewController {
     private lazy var tableView: UITableView  = {
         let tableView = UITableView()
         tableView.cancelEstimatedHeight()
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         regClass(tableView, cell: HomeTopicListTableViewCell.self)
         
@@ -54,8 +54,8 @@ class HomeViewController: UIViewController {
         self.setupNavigationItem()
         
         //监听程序即将进入前台运行、进入后台休眠 事件
-        NotificationCenter.default.addObserver(self, selector: #selector(HomeViewController.applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(HomeViewController.applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(HomeViewController.applicationWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(HomeViewController.applicationDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
         
         self.view.addSubview(self.tableView);
         self.tableView.snp.makeConstraints{ (make) -> Void in
@@ -90,8 +90,8 @@ class HomeViewController: UIViewController {
 
         let rightButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         rightButton.contentMode = .center
-        rightButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -15)
-        rightButton.setImage(UIImage.imageUsedTemplateMode("ic_more_horiz_36pt")!.withRenderingMode(.alwaysTemplate), for: .normal)
+        rightButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -15)
+        rightButton.setImage(UIImage.imageUsedTemplateMode("ic_more_horiz_36pt")!.withRenderingMode(.alwaysTemplate), for: UIControlState())
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightButton)
         rightButton.addTarget(self, action: #selector(HomeViewController.rightClick), for: .touchUpInside)
     }
@@ -158,7 +158,7 @@ class HomeViewController: UIViewController {
                 self.tableView.mj_header.endRefreshing()
             })
     }
-    
+
     var nextPageDisposable:Disposable?
     func getNextPage(){
         if self.topicList.count <= 0{

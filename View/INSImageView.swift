@@ -58,7 +58,7 @@ open class INSImageView: UIImageView {
         layoutImageView()
     }
     
-    open override var contentMode: UIView.ContentMode {
+    open override var contentMode: UIViewContentMode {
         didSet { layoutImageView() }
     }
     

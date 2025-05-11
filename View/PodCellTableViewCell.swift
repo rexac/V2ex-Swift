@@ -19,7 +19,7 @@ class PodCellTableViewCell: BaseDetailTableViewCell {
         return label
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = V2EXColor.colors.v2_backgroundColor
         self.contentView.addSubview(self.descriptionLabel)

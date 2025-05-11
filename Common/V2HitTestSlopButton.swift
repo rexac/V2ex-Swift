@@ -12,11 +12,11 @@ class V2HitTestSlopButton: UIButton {
     var hitTestSlop:UIEdgeInsets = UIEdgeInsets.zero
     
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        if hitTestSlop == .zero {
+        if UIEdgeInsetsEqualToEdgeInsets(hitTestSlop, UIEdgeInsets.zero) {
             return super.point(inside: point, with:event)
         }
         else{
-            return bounds.inset(by: hitTestSlop).contains(point)
+            return UIEdgeInsetsInsetRect(self.bounds, hitTestSlop).contains(point)
         }
     }
 }

@@ -12,10 +12,11 @@ import WebKit
 class CloudflareCheckingController: UIViewController, WKNavigationDelegate {
     let webView:WKWebView = WKWebView()
     var completion: (() -> ())? = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
-        
+
         self.webView.customUserAgent = USER_AGENT
         self.webView.backgroundColor = self.view.backgroundColor
         self.webView.navigationDelegate = self
@@ -23,33 +24,24 @@ class CloudflareCheckingController: UIViewController, WKNavigationDelegate {
         self.webView.snp.makeConstraints{ (make) -> Void in
             make.edges.equalTo(self.view)
         }
-        if #available(iOS 11.0, *) {
-            self.webView.scrollView.contentInsetAdjustmentBehavior = .never
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = false
-        }
-        
+        self.automaticallyAdjustsScrollViewInsets = false
+
         _ = self.webView.load(URLRequest(url: URL(string: V2EXURL)!))
     }
 
     // Cloudflare 检查后设置 cookies
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        let processCookies = { [weak self] (cookies: [HTTPCookie]) in
+        if let cookies = HTTPCookieStorage.shared.cookies(for: URL(string: V2EXURL)!) {
             for cookie in cookies {
                 HTTPCookieStorage.shared.setCookie(cookie)
             }
-            if let _ = cookies.first(where: { $0.name == "V2EX_LANG" }) {
-                self?.dismiss(animated: true) {
+            let LANGCookie = cookies.first { $0.name == "V2EX_LANG" }
+
+            // 有语言 cookie，则证明检查通过
+            if LANGCookie != nil {
+                self.dismiss(animated: true) { [weak self] in
                     self?.completion?()
                 }
-            }
-        }
-
-        if #available(iOS 11.0, *) {
-            self.webView.configuration.websiteDataStore.httpCookieStore.getAllCookies(processCookies)
-        } else {
-            if let cookies = HTTPCookieStorage.shared.cookies(for: URL(string: V2EXURL)!) {
-                processCookies(cookies)
             }
         }
     }

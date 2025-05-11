@@ -13,7 +13,7 @@ class NotificationTableViewCell: UITableViewCell {
     /// 头像
     var avatarImageView: UIImageView = {
         let imageView =  UIImageView()
-        imageView.contentMode=UIView.ContentMode.scaleAspectFit
+        imageView.contentMode=UIViewContentMode.scaleAspectFit
         imageView.layer.cornerRadius = 3
         imageView.layer.masksToBounds = true
         return imageView
@@ -74,7 +74,7 @@ class NotificationTableViewCell: UITableViewCell {
     /// 回复按钮
     var replyButton:UIButton = {
         let button = UIButton.roundedButton()
-        button.setTitle(NSLocalizedString("reply"), for: .normal)
+        button.setTitle(NSLocalizedString("reply"), for: UIControlState())
         return button
     }()
     
@@ -83,7 +83,7 @@ class NotificationTableViewCell: UITableViewCell {
     /// 点击回复按钮，调用的事件
     var replyButtonClickHandler: ((UIButton) -> Void)?
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         self.setup();
     }
@@ -92,7 +92,7 @@ class NotificationTableViewCell: UITableViewCell {
     }
     
     func setup()->Void{
-        
+
         let selectedBackgroundView = UIView()
         self.selectedBackgroundView = selectedBackgroundView
         
@@ -118,7 +118,7 @@ class NotificationTableViewCell: UITableViewCell {
         
         //按钮点击事件
         self.replyButton.addTarget(self, action: #selector(replyButtonClick(_:)), for: .touchUpInside)
-        
+
         self.themeChangedHandler = {[weak self] _ in
             self?.backgroundColor=V2EXColor.colors.v2_backgroundColor;
             self?.selectedBackgroundView?.backgroundColor = V2EXColor.colors.v2_backgroundColor
@@ -130,6 +130,7 @@ class NotificationTableViewCell: UITableViewCell {
             self?.dropUpImageView.tintColor = self?.commentPanel.backgroundColor
             self?.contentPanel.backgroundColor = V2EXColor.colors.v2_CellWhiteBackgroundColor
             self?.replyButton.backgroundColor  = V2EXColor.colors.v2_ButtonBackgroundColor
+
         }
         
     }

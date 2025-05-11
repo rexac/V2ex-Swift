@@ -28,7 +28,7 @@ class HomeTopicListTableViewCell: UITableViewCell {
     /// 头像
     var avatarImageView: UIImageView = {
         let imageview = UIImageView()
-        imageview.contentMode=UIView.ContentMode.scaleAspectFit
+        imageview.contentMode=UIViewContentMode.scaleAspectFit
         return imageview
     }()
     
@@ -78,7 +78,7 @@ class HomeTopicListTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         self.setup();
     }
@@ -121,7 +121,7 @@ class HomeTopicListTableViewCell: UITableViewCell {
             self?.replyCountLabel.backgroundColor = self?.contentPanel.backgroundColor
             self?.replyCountIconImageView.backgroundColor = self?.contentPanel.backgroundColor
             self?.topicTitleLabel.backgroundColor = self?.contentPanel.backgroundColor
-            
+
             self?.setTitleText()
         }
         
@@ -140,8 +140,7 @@ class HomeTopicListTableViewCell: UITableViewCell {
             make.top.left.right.equalTo(self.contentView);
         }
         self.avatarImageView.snp.makeConstraints{ (make) -> Void in
-            make.left.top.equalToSuperview().offset(12);
-            make.width.height.equalTo(35);
+            make.left.top.equalToSuperview().offset(12);            make.width.height.equalTo(35);
         }
         self.userNameLabel.snp.makeConstraints{ (make) -> Void in
             make.left.equalTo(self.avatarImageView.snp.right).offset(10);
@@ -198,19 +197,21 @@ class HomeTopicListTableViewCell: UITableViewCell {
     
     func superBind(_ model:TopicListModel){
         self.itemModel = model
-        
+         
         setTitleText()
         self.userNameLabel.text = model.userName;
         if let avatar = model.avata?.avatarString {
             self.avatarImageView.fin_setImageWithUrl(URL(string: avatar)!, placeholderImage: nil, imageModificationClosure: fin_defaultImageModification() )
         }
         self.replyCountLabel.text = model.replies;
+
     }
+
     func setTitleText(){
         if let model = self.itemModel {
             let style = NSMutableParagraphStyle()
             style.lineSpacing = 3
-            
+
             let attrStr = NSAttributedString(
                 string: model.topicTitle ?? "",
                 attributes: [

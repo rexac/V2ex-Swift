@@ -19,13 +19,13 @@ class TopicDetailToolCell: UITableViewCell {
     let sortButton:V2HitTestSlopButton = {
         let btn = V2HitTestSlopButton()
         btn.titleLabel?.font = v2Font(12)
-        btn.hitTestSlop = UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10)
+        btn.hitTestSlop = UIEdgeInsetsMake(-10, -10, -10, -10)
         btn.titleLabel?.textAlignment = .left
         return btn
     }()
     var sortButtonClick:((_ sender:UIButton) -> Void)?
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         self.setup();
     }

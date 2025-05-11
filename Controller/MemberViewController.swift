@@ -8,15 +8,16 @@
 
 import UIKit
 import FXBlurView
+import DeviceKit
 
 class MemberViewController: UIViewController,UITableViewDelegate,UITableViewDataSource ,UIScrollViewDelegate {
 
     var username:String?
     var model:MemberModel?
-    
+
     var blockButton:UIButton?
     var followButton:UIButton?
-    
+
     var color:CGFloat = 0
     var headerHeight: CGFloat = {
         if UIDevice.current.isIphoneX {
@@ -42,10 +43,7 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
         let tableView = UITableView()
         tableView.backgroundColor = UIColor.clear
         tableView.estimatedRowHeight = 200
-        tableView.separatorStyle = .none
-        if #available(iOS 15.0, *) {
-            tableView.sectionHeaderTopPadding = 0.0
-        }
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         if #available(iOS 11.0, *) {
             tableView.contentInsetAdjustmentBehavior = .never
@@ -83,10 +81,11 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
         self.tableView.snp.makeConstraints{ (make) -> Void in
             make.top.right.bottom.left.equalTo(self.view);
         }
-        
+
         self.navigationItem.titleView = self.titleView
-        
-        let aloadView = UIActivityIndicatorView(style: .white)
+
+
+        let aloadView = UIActivityIndicatorView(activityIndicatorStyle: .white)
         self.view.addSubview(aloadView)
         aloadView.startAnimating()
         aloadView.snp.makeConstraints{ (make) -> Void in
@@ -106,8 +105,9 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
                 self?.color = 0
             }
         }
+
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         (self.navigationController as? V2EXNavigationController)?.navigationBarAlpha = 0
         self.changeNavigationBarTintColor()
@@ -123,6 +123,7 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
         if self.titleLabel == nil {
             var frame = self.titleView.frame
             frame.origin.x = (frame.size.width - SCREEN_WIDTH)/2
@@ -157,7 +158,7 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
             }
         })
     }
-    
+
     func getDataSuccessfully(_ aModel:MemberModel){
         self.model = aModel
         self.titleLabel?.text = self.model?.userName
@@ -264,17 +265,17 @@ class MemberViewController: UIViewController,UITableViewDelegate,UITableViewData
             make.centerY.equalTo(view)
             make.leading.equalTo(view).offset(12)
         }
-        
+
         weak var weakView = view
         view.themeChangedHandler = {_ in
             weakView?.backgroundColor = V2EXColor.colors.v2_CellWhiteBackgroundColor
             label.textColor = V2EXColor.colors.v2_TopicListUserNameColor
         }
-        
+
         tableViewHeader.append(view)
         return view
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = getCell(tableView, cell: MemberHeaderCell.self, indexPath: indexPath);
@@ -343,8 +344,8 @@ extension MemberViewController{
     func refreshButtonImage() {
         let blockImage = self.model?.blockState == .blocked ? UIImage(named: "ic_visibility_off")! : UIImage(named: "ic_visibility")!
         let followImage = self.model?.followState == .followed ? UIImage(named: "ic_favorite")! : UIImage(named: "ic_favorite_border")!
-        self.blockButton?.setImage(blockImage.withRenderingMode(.alwaysTemplate), for: .normal)
-        self.followButton?.setImage(followImage.withRenderingMode(.alwaysTemplate), for: .normal)
+        self.blockButton?.setImage(blockImage.withRenderingMode(.alwaysTemplate), for: UIControlState())
+        self.followButton?.setImage(followImage.withRenderingMode(.alwaysTemplate), for: UIControlState())
     }
     
     @objc func toggleFollowState(){

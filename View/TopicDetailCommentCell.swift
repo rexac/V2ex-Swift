@@ -14,7 +14,7 @@ class TopicDetailCommentCell: UITableViewCell{
     /// 头像
     var avatarImageView: UIImageView = {
         let avatarImageView = UIImageView()
-        avatarImageView.contentMode=UIView.ContentMode.scaleAspectFit
+        avatarImageView.contentMode=UIViewContentMode.scaleAspectFit
         avatarImageView.layer.cornerRadius = 3
         avatarImageView.layer.masksToBounds = true
         return avatarImageView
@@ -72,13 +72,13 @@ class TopicDetailCommentCell: UITableViewCell{
             self.authorLabel.text = isAuthor ? "• 楼主" : ""
         }
     }
-    
+
     //文本高度约束
     //因YYLabel自适应高度不完善，最好还是在在绑定数据时，手动更新
     //如果换成UILabel或其他自适应高度Label控件，则不需要这一步
     var textLabelHeight: Constraint?
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         self.setup();
     }
@@ -89,7 +89,7 @@ class TopicDetailCommentCell: UITableViewCell{
     func setup()->Void{
         let selectedBackgroundView = UIView()
         self.selectedBackgroundView = selectedBackgroundView
-        
+
         self.contentView.addSubview(self.contentPanel);
         self.contentPanel.addSubview(self.avatarImageView);
         self.contentPanel.addSubview(self.userNameLabel);
@@ -100,7 +100,8 @@ class TopicDetailCommentCell: UITableViewCell{
         self.contentPanel.addSubview(self.commentLabel);
 
         self.setupLayout()
-        
+
+
         //点击用户头像，跳转到用户主页
         self.avatarImageView.isUserInteractionEnabled = true
         self.userNameLabel.isUserInteractionEnabled = true
@@ -115,7 +116,7 @@ class TopicDetailCommentCell: UITableViewCell{
                 action: #selector(TopicDetailCommentCell.longPressHandle(_:))
             )
         )
-        
+
         self.themeChangedHandler = {[weak self] _ in
             self?.userNameLabel.textColor = V2EXColor.colors.v2_TopicListUserNameColor
             self?.authorLabel.textColor = V2EXColor.colors.v2_TopicListUserNameColor
@@ -169,9 +170,9 @@ class TopicDetailCommentCell: UITableViewCell{
             make.top.equalTo(self.avatarImageView.snp.bottom).offset(12);
             make.left.equalTo(self.avatarImageView);
             make.right.equalTo(self.contentPanel).offset(-12);
-            
+
             self.textLabelHeight = make.height.equalTo(0).constraint
-            
+
             make.bottom.equalTo(self.contentPanel.snp.bottom).offset(-12)
         }
         
@@ -234,7 +235,7 @@ extension TopicDetailCommentCell : V2CommentAttachmentImageTapDelegate ,V2PhotoB
         let photo = V2Photo(url: URL(string: self.itemModel!.images[index] as! String)!)
         return photo
     }
-    func guideContentModeInPhotoBrowser(_ photoBrowser: V2PhotoBrowser, index: Int) -> UIView.ContentMode {
+    func guideContentModeInPhotoBrowser(_ photoBrowser: V2PhotoBrowser, index: Int) -> UIViewContentMode {
         if let attachment = self.itemModel!.textLayout!.attachments?[index] , let image = attachment.content  as? V2CommentAttachmentImage{
             return image.contentMode
         }

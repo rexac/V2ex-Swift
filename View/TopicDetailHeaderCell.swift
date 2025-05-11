@@ -13,7 +13,7 @@ class TopicDetailHeaderCell: UITableViewCell {
     /// 头像
    var avatarImageView: UIImageView = {
         let imageview = UIImageView();
-        imageview.contentMode=UIView.ContentMode.scaleAspectFit;
+        imageview.contentMode=UIViewContentMode.scaleAspectFit;
         imageview.layer.cornerRadius = 3;
         imageview.layer.masksToBounds = true;
         return imageview
@@ -40,7 +40,7 @@ class TopicDetailHeaderCell: UITableViewCell {
         label.isUserInteractionEnabled = true
         return label
     }()
-    
+
     let reportImageView:UIImageView = {
         
         let imageView = HitTestSlopImageView()
@@ -50,7 +50,7 @@ class TopicDetailHeaderCell: UITableViewCell {
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
-    
+
     /// 帖子标题
     var topicTitleLabel: UILabel = {
         let label = V2SpacingLabel();
@@ -69,7 +69,7 @@ class TopicDetailHeaderCell: UITableViewCell {
     weak var itemModel:TopicDetailModel?
     var nodeClickHandler:(() -> Void)?
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         self.setup();
     }
@@ -78,8 +78,7 @@ class TopicDetailHeaderCell: UITableViewCell {
     }
     func setup()->Void{
         self.selectionStyle = .none
-        
-        
+
         self.contentView.addSubview(self.contentPanel);
         self.contentPanel.addSubview(self.avatarImageView);
         self.contentPanel.addSubview(self.userNameLabel);
@@ -99,7 +98,7 @@ class TopicDetailHeaderCell: UITableViewCell {
         self.userNameLabel.addGestureRecognizer(userNameTap)
         self.nodeNameLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(nodeClick)))
         self.reportImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(reportClick)))
-        
+
         self.themeChangedHandler = {[weak self] _ in
             self?.backgroundColor=V2EXColor.colors.v2_backgroundColor;
             self?.userNameLabel.textColor = V2EXColor.colors.v2_TopicListUserNameColor;
@@ -110,6 +109,7 @@ class TopicDetailHeaderCell: UITableViewCell {
             self?.topicTitleLabel.textColor = V2EXColor.colors.v2_TopicListTitleColor;
             self?.contentPanel.backgroundColor = V2EXColor.colors.v2_CellWhiteBackgroundColor
         }
+        
     }
     
     fileprivate func setupLayout(){

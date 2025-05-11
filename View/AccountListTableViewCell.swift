@@ -27,7 +27,7 @@ class AccountListTableViewCell: UITableViewCell {
         usedLabel.text = NSLocalizedString("current")
         return usedLabel
     }()
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         self.setup();
     }
@@ -64,12 +64,12 @@ class AccountListTableViewCell: UITableViewCell {
             make.right.bottom.equalTo(self.contentView)
             make.height.equalTo(SEPARATOR_HEIGHT)
         }
-        
+
         self.themeChangedHandler = {[weak self] _ in
             self?.backgroundColor = V2EXColor.colors.v2_CellWhiteBackgroundColor
             self?.userNameLabel.textColor = V2EXColor.colors.v2_TopicListUserNameColor
             self?.usedLabel.textColor = V2EXColor.colors.v2_NoticePointColor
-            
+
             separator.image = createImageWithColor(V2EXColor.colors.v2_SeparatorColor)
         }
     }

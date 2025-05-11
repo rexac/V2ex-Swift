@@ -16,7 +16,7 @@ class NotificationsViewController: BaseViewController,UITableViewDataSource,UITa
         let tableView = UITableView()
         tableView.backgroundColor = UIColor.clear
         tableView.estimatedRowHeight = 100
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         regClass(tableView, cell: NotificationTableViewCell.self)
         
@@ -39,7 +39,7 @@ class NotificationsViewController: BaseViewController,UITableViewDataSource,UITa
         })
         self.showLoadingView()
         self.tableView.mj_header.beginRefreshing();
-        
+
         self.themeChangedHandler = {[weak self] _ in
             self?.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
             self?.tableView.backgroundColor = V2EXColor.colors.v2_backgroundColor

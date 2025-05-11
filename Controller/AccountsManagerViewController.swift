@@ -14,7 +14,7 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.estimatedRowHeight = 100
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         regClass(tableView, cell: BaseDetailTableViewCell.self)
         regClass(tableView, cell: AccountListTableViewCell.self)
@@ -30,13 +30,13 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
 
         let warningButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         warningButton.contentMode = .center
-        warningButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -20)
-        warningButton.setImage(UIImage.imageUsedTemplateMode("ic_warning")!.withRenderingMode(.alwaysTemplate), for: .normal)
+        warningButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -20)
+        warningButton.setImage(UIImage.imageUsedTemplateMode("ic_warning")!.withRenderingMode(.alwaysTemplate), for: UIControlState())
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: warningButton)
         warningButton.addTarget(self, action: #selector(AccountsManagerViewController.warningClick), for: .touchUpInside)
 
         self.view.addSubview(self.tableView);
-        self.tableView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        self.tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0)
         self.tableView.snp.makeConstraints{ (make) -> Void in
             make.top.bottom.equalTo(self.view);
             make.center.equalTo(self.view);
@@ -46,11 +46,12 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
         for (_,user) in V2UsersKeychain.sharedInstance.users {
             self.users.append(user)
         }
-        
+
         self.themeChangedHandler = {[weak self] _ in
             self?.tableView.backgroundColor = V2EXColor.colors.v2_backgroundColor
             self?.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
         }
+
     }
 
     @objc func warningClick(){
@@ -96,7 +97,7 @@ class AccountsManagerViewController: UIViewController,UITableViewDataSource,UITa
         }
         return false
     }
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             if let username = self.users[indexPath.row].username {
                 self.users.remove(at: indexPath.row)

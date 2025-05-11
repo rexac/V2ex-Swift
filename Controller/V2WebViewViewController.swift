@@ -15,7 +15,7 @@ class V2WebViewViewController: UIViewController ,V2WebViewProgressDelegate ,V2Ac
     var webView:WKWebView?
     var closeButton:UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitle("关闭", for: .normal)
+        button.setTitle("关闭", for: UIControlState())
         button.contentHorizontalAlignment = .left
         button.titleLabel?.font = v2Font(14)
         button.isHidden = true
@@ -39,20 +39,20 @@ class V2WebViewViewController: UIViewController ,V2WebViewProgressDelegate ,V2Ac
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
         
         let backbtn = UIButton(type: .custom)
-        backbtn.setTitle("返回", for: .normal)
+        backbtn.setTitle("返回", for: UIControlState())
         backbtn.frame = CGRect(x: 0, y: 0, width: 35, height: 44)
         backbtn.imageView!.contentMode = .center;
-        backbtn.setImage(UIImage.imageUsedTemplateMode("ic_keyboard_arrow_left_36pt"), for: .normal)
-        backbtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: -21, bottom: 0, right: 0)
-        backbtn.titleEdgeInsets = UIEdgeInsets(top: 0, left: -31, bottom: 0, right: 0)
+        backbtn.setImage(UIImage.imageUsedTemplateMode("ic_keyboard_arrow_left_36pt"), for: UIControlState())
+        backbtn.imageEdgeInsets = UIEdgeInsetsMake(0, -21, 0, 0)
+        backbtn.titleEdgeInsets = UIEdgeInsetsMake(0, -31, 0, 0)
         backbtn.titleLabel?.font = v2Font(14)
-        backbtn.setTitleColor(self.navigationController?.navigationBar.tintColor, for: .normal)
+        backbtn.setTitleColor(self.navigationController?.navigationBar.tintColor, for: UIControlState())
         backbtn.contentHorizontalAlignment = .left
         
         backbtn.addTarget(self, action: #selector(V2WebViewViewController.back), for: .touchUpInside)
 
         self.closeButton.frame = CGRect(x: 40, y: 0, width: 35, height: 44)
-        self.closeButton.setTitleColor(self.navigationController?.navigationBar.tintColor, for: .normal)
+        self.closeButton.setTitleColor(self.navigationController?.navigationBar.tintColor, for: UIControlState())
         self.closeButton.addTarget(self, action: #selector(V2WebViewViewController.pop), for: .touchUpInside)
         
         leftBarButtonsPanelView.addSubview(backbtn)
@@ -61,8 +61,8 @@ class V2WebViewViewController: UIViewController ,V2WebViewProgressDelegate ,V2Ac
         
         let rightButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         rightButton.contentMode = .center
-        rightButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -15)
-        rightButton.setImage(UIImage(named: "ic_more_horiz_36pt")!.withRenderingMode(.alwaysTemplate), for: .normal)
+        rightButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -15)
+        rightButton.setImage(UIImage(named: "ic_more_horiz_36pt")!.withRenderingMode(.alwaysTemplate), for: UIControlState())
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightButton)
         rightButton.addTarget(self, action: #selector(V2WebViewViewController.rightClick), for: .touchUpInside)
         
@@ -74,13 +74,7 @@ class V2WebViewViewController: UIViewController ,V2WebViewProgressDelegate ,V2Ac
         self.webView!.backgroundColor = self.view.backgroundColor
         self.view.addSubview(self.webView!)
         self.webView!.snp.makeConstraints{ (make) -> Void in
-            make.right.bottom.left.equalTo(self.view)
-            make.top.equalTo(NavigationBarHeight)
-        }
-        if #available(iOS 11.0, *) {
-            self.webView!.scrollView.contentInsetAdjustmentBehavior = .never
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = false
+            make.top.right.bottom.left.equalTo(self.view)
         }
         
         self.webViewProgressView = V2WebViewProgressView(frame: CGRect(x: 0, y: NavigationBarHeight, width: SCREEN_WIDTH, height: 2))
@@ -149,20 +143,13 @@ class V2WebViewViewController: UIViewController ,V2WebViewProgressDelegate ,V2Ac
         activityView.dismiss()
         if  let url = self.webView?.url {
             if url.absoluteString.Lenght > 0 {
-                openURL(url: url)
+                UIApplication.shared.openURL(url)
                 return;
             }
         }
         if let url = URL(string: self.url) {
-            openURL(url: url)
-        }
-    }
-    // 兼容iOS9和iOS10+
-    private func openURL(url: URL) {
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        } else {
             UIApplication.shared.openURL(url)
         }
+        
     }
 }

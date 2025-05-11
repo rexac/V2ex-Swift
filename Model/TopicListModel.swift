@@ -117,7 +117,7 @@ class FavoriteListModel: TopicListModel {
         
         let node = favoritesRootNode.xPath("./table/tr/td[3]/span/a[1]").first
         self.topicTitle = node?.content
-
+        
         var topicIdUrl = node?["href"];
         
         if var id = topicIdUrl {

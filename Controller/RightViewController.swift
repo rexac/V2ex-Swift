@@ -34,7 +34,7 @@ class RightViewController: UIViewController,UITableViewDelegate,UITableViewDataS
         let tableView = UITableView()
         tableView.backgroundColor = UIColor.clear
         tableView.estimatedRowHeight=100
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         if #available(iOS 11.0, *) {
             tableView.contentInsetAdjustmentBehavior = .never
         }
@@ -44,25 +44,12 @@ class RightViewController: UIViewController,UITableViewDelegate,UITableViewDataS
         tableView.dataSource = self
         return tableView
     }()
-    override var preferredStatusBarStyle: UIStatusBarStyle{
-        get {
-            if V2EXColor.sharedInstance.style == V2EXColor.V2EXColorStyleDefault {
-                if #available(iOS 13.0, *) {
-                    return .darkContent
-                } else {
-                    return .default
-                }
-            }
-            else{
-                return .lightContent
-            }
-        }
-    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = V2EXColor.colors.v2_backgroundColor;
         
-        var currentTab:String? = V2EXSettings.sharedInstance[kHomeTab]
+        var currentTab = V2EXSettings.sharedInstance[kHomeTab]
         if currentTab == nil {
             currentTab = "all"
         }
@@ -99,7 +86,7 @@ class RightViewController: UIViewController,UITableViewDelegate,UITableViewDataS
         if paddingTop <= 0 {
             paddingTop = 20
         }
-        self.tableView.contentInset = UIEdgeInsets(top: paddingTop, left: 0, bottom: 0, right: 0)
+        self.tableView.contentInset = UIEdgeInsetsMake(paddingTop, 0, 0, 0)
     }
     func maximumRightDrawerWidth() -> CGFloat{
         // 调整RightView宽度
@@ -108,7 +95,7 @@ class RightViewController: UIViewController,UITableViewDelegate,UITableViewDataS
         for node in rightNodes {
             let size = node.nodeName!.boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: CGFloat(MAXFLOAT)),
                                                    options: NSStringDrawingOptions.usesLineFragmentOrigin,
-                                                   attributes: [NSAttributedString.Key(rawValue: "NSFontAttributeName"):cellFont!],
+                                                   attributes: [NSAttributedStringKey(rawValue: "NSFontAttributeName"):cellFont!],
                                                    context: nil)
             let width = size.width + 50
             if width > 100 {

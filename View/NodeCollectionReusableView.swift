@@ -18,19 +18,19 @@ class NodeCollectionReusableView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(label);
-        
+
         label.snp.makeConstraints{ (make) -> Void in
             make.centerY.equalTo(self)
             make.left.equalTo(self).offset(15)
         }
-        
+
         self.themeChangedHandler = {[weak self] _ in
             self?.backgroundColor = V2EXColor.colors.v2_backgroundColor
             self?.label.textColor = V2EXColor.colors.v2_TopicListTitleColor
             self?.label.backgroundColor = V2EXColor.colors.v2_backgroundColor
         }
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

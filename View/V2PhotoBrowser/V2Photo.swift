@@ -29,7 +29,6 @@ class V2Photo :NSObject{
         if self.underlyingImage != nil{
             return ;
         }
-    
         let resource = ImageResource(downloadURL: self.url)
         KingfisherManager.shared.cache.retrieveImage(forKey: resource.cacheKey, options: nil) { (image, cacheType) -> () in
             if image != nil {
@@ -56,6 +55,8 @@ class V2Photo :NSObject{
                             KingfisherManager.shared.cache.store(image, original: originalData, forKey: resource.cacheKey, toDisk: true, completionHandler: nil)
                         }
                 }
+                
+                
             }
         }
     }

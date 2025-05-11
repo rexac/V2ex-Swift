@@ -9,6 +9,7 @@
 import UIKit
 
 class TopicDetailViewController: BaseViewController {
+    
     var topicId = "0"
     var currentPage = 1
     
@@ -27,7 +28,7 @@ class TopicDetailViewController: BaseViewController {
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.cancelEstimatedHeight()
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         regClass(tableView, cell: TopicDetailHeaderCell.self)
         regClass(tableView, cell: TopicDetailWebViewContentCell.self)
@@ -40,14 +41,13 @@ class TopicDetailViewController: BaseViewController {
         return tableView
     }()
 
-    // 忽略帖子成功后 ，调用的闭包
+    /// 忽略帖子成功后 ，调用的闭包
     var ignoreTopicHandler: ((String) -> Void)?
     // 点击右上角more按钮后，弹出的 activityView
     // 只在activityView 显示在屏幕上持有它，如果activityView释放了，这里也一起释放。
     fileprivate weak var activityView: V2ActivityViewController?
     
     // MARK: - 页面事件
-
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = NSLocalizedString("postDetails")
@@ -58,19 +58,20 @@ class TopicDetailViewController: BaseViewController {
         
         let rightButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         rightButton.contentMode = .center
-        rightButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -15)
-        rightButton.setImage(UIImage(named: "ic_more_horiz_36pt")!.withRenderingMode(.alwaysTemplate), for: .normal)
+        rightButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -15)
+        rightButton.setImage(UIImage(named: "ic_more_horiz_36pt")!.withRenderingMode(.alwaysTemplate), for: UIControlState())
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightButton)
         rightButton.addTarget(self, action: #selector(TopicDetailViewController.rightClick), for: .touchUpInside)
-        
+
+
         self.tableView.mj_header = V2RefreshHeader(refreshingBlock: { [weak self] in
             self?.getData()
         })
         self.tableView.mj_footer = V2RefreshFooter(refreshingBlock: { [weak self] in
             self?.getNextPage()
         })
-        
-        self.themeChangedHandler = { [weak self] _ in
+
+        self.themeChangedHandler = {[weak self] _ in
             self?.tableView.backgroundColor = V2EXColor.colors.v2_backgroundColor
             self?.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
             
@@ -85,7 +86,8 @@ class TopicDetailViewController: BaseViewController {
         TopicDetailModel.getTopicDetailById(self.topicId) {
             (response: V2ValueResponse<(TopicDetailModel?, [TopicCommentModel])>) in
             if response.success {
-                if let aModel = response.value!.0 {
+
+                if let aModel = response.value!.0{
                     self.model = aModel
                 }
                 self.commentSort = .asc
@@ -99,8 +101,10 @@ class TopicDetailViewController: BaseViewController {
                 self.webViewContentCell = nil
                 
                 self.tableView.reloadData()
-            } else {
-                V2Error(response.message)
+
+            }
+            else{
+                V2Error(response.message);
             }
             if self.tableView.mj_header.isRefreshing {
                 self.tableView.mj_header.endRefreshing()
@@ -150,7 +154,7 @@ class TopicDetailViewController: BaseViewController {
         
         if self.model == nil
             || self.currentPage > self.model!.commentTotalPages
-            || self.currentPage <= 0
+            || self.currentPage <= 0 
         {
             self.endRefreshingWithNoMoreData()
             return
@@ -194,7 +198,7 @@ class TopicDetailViewController: BaseViewController {
         if self.commentSort == .asc {
             self.currentPage = 0
         } else {
-            self.currentPage = self.model!.commentTotalPages + 1
+            self.currentPage = self.model!.commentTotalPages + 1;
         }
         self.tableView.mj_footer.resetNoMoreData()
         needsClearOldComments = true
@@ -218,8 +222,9 @@ class TopicDetailViewController: BaseViewController {
     }
 }
 
-// MARK: - UITableView DataSource
 
+
+// MARK: - UITableView DataSource
 enum TopicDetailTableViewSection: Int {
     case header = 0, comment, other
 }
@@ -259,9 +264,9 @@ extension TopicDetailViewController: UITableViewDelegate, UITableViewDataSource 
         case .header:
             switch _headerComponent {
             case .title:
-                return UITableView.automaticDimension
+                return UITableViewAutomaticDimension
             case .webViewContent:
-                if let height = self.webViewContentCell?.contentHeight, height > 0 {
+                if let height =  self.webViewContentCell?.contentHeight, height > 0 {
                     return self.webViewContentCell!.contentHeight
                 } else {
                     return 1
@@ -270,7 +275,7 @@ extension TopicDetailViewController: UITableViewDelegate, UITableViewDataSource 
                 return 45
             }
         case .comment:
-            return UITableView.automaticDimension
+            return UITableViewAutomaticDimension
         case .other:
             return 200
         }
@@ -355,8 +360,10 @@ extension TopicDetailViewController: UITableViewDelegate, UITableViewDataSource 
     }
 }
 
-// MARK: - actionSheet
 
+
+
+// MARK: - actionSheet
 extension TopicDetailViewController: UIActionSheetDelegate {
     func selectedRowWithActionSheet(_ indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
@@ -384,8 +391,8 @@ extension TopicDetailViewController: UIActionSheetDelegate {
         let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "取消", destructiveButtonTitle: nil, otherButtonTitles: "回复", "感谢", "查看对话")
         actionSheet.tag = indexPath.row
         actionSheet.show(in: self.view)
+        
     }
-
     func actionSheet(_ actionSheet: UIActionSheet, clickedButtonAt buttonIndex: Int) {
         guard buttonIndex > 0 && buttonIndex <= 3 else {
             return
@@ -395,7 +402,6 @@ extension TopicDetailViewController: UIActionSheetDelegate {
                       #selector(TopicDetailViewController.relevantComment(_:))][buttonIndex - 1],
                      with: actionSheet.tag)
     }
-
     @objc func replyComment(_ row: NSNumber) {
         V2User.sharedInstance.ensureLoginWithHandler {
             let item = self.commentsArray[row as! Int]
@@ -403,11 +409,10 @@ extension TopicDetailViewController: UIActionSheetDelegate {
             replyViewController.atSomeone = "@" + (item.userName ?? " ")
             replyViewController.topicModel = self.model!
             let nav = V2EXNavigationController(rootViewController: replyViewController)
-            self.navigationController?.present(nav, animated: true, completion: nil)
-        }
+            self.navigationController?.present(nav, animated: true, completion: nil)        }
     }
 
-    @objc func thankComment(_ row: NSNumber) {
+    @objc func thankComment(_ row:NSNumber){
         guard V2User.sharedInstance.isLogin else {
             V2Inform("请先登录")
             return
@@ -441,7 +446,7 @@ extension TopicDetailViewController: UIActionSheetDelegate {
         }
     }
 
-    @objc func relevantComment(_ row: NSNumber) {
+    @objc func relevantComment(_ row:NSNumber){
         let item = self.commentsArray[row as! Int]
         let sourceArr = self.commentSort == .asc ? self.commentsArray : self.commentsArray.reversed()
         let relevantComments = TopicCommentModel.getRelevantCommentsInArray(sourceArr, firstComment: item)
@@ -453,8 +458,9 @@ extension TopicDetailViewController: UIActionSheetDelegate {
     }
 }
 
-// MARK: - V2ActivityView
 
+
+// MARK: - V2ActivityView
 enum V2ActivityViewTopicDetailAction: Int {
     case block = 0, favorite, grade, share, explore
 }
@@ -474,11 +480,11 @@ extension TopicDetailViewController: V2ActivityViewDataSource {
         ][indexPath.row], image: UIImage(named: ["ic_block_48pt", "ic_grade_48pt", "ic_favorite_48pt", "ic_share_48pt", "ic_explore_48pt"][indexPath.row])!)
     }
 
-    func V2ActivityView(_ activityView: V2ActivityViewController, heightForFooterInSection section: Int) -> CGFloat {
+    func V2ActivityView(_ activityView:V2ActivityViewController ,heightForFooterInSection section: Int) -> CGFloat{
         return 45
     }
 
-    func V2ActivityView(_ activityView: V2ActivityViewController, viewForFooterInSection section: Int) -> UIView? {
+    func V2ActivityView(_ activityView:V2ActivityViewController ,viewForFooterInSection section: Int) ->UIView?{
         let view = UIView()
         view.backgroundColor = V2EXColor.colors.v2_ButtonBackgroundColor
         
@@ -554,12 +560,10 @@ extension TopicDetailViewController: V2ActivityViewDataSource {
             let shareUrl = NSURL(string: V2EXURL + "t/" + self.model!.topicId!)
             let shareArr: NSArray = [shareUrl!]
             let activityController = UIActivityViewController(activityItems: shareArr as [AnyObject], applicationActivities: nil)
-            activityController.excludedActivityTypes = [UIActivity.ActivityType.airDrop]
+             activityController.excludedActivityTypes = [UIActivityType.airDrop]
             self.navigationController?.present(activityController, animated: true, completion: nil)
         case .explore:
-            if let url = URL(string: V2EXURL + "t/" + self.model!.topicId!) {
-                openURL(url: url)
-            }
+            UIApplication.shared.openURL(URL(string: V2EXURL + "t/" + self.model!.topicId!)!)
         }
     }
     
@@ -569,16 +573,7 @@ extension TopicDetailViewController: V2ActivityViewDataSource {
             let replyViewController = ReplyingViewController()
             replyViewController.topicModel = self.model!
             let nav = V2EXNavigationController(rootViewController: replyViewController)
-            self.navigationController?.present(nav, animated: true, completion: nil)
-        }
+            self.navigationController?.present(nav, animated: true, completion: nil)        }
     }
-    
-    // 兼容iOS9和iOS10+
-    private func openURL(url: URL) {
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url)
-        }
-    }
+
 }

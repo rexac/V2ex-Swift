@@ -15,14 +15,14 @@ class NodesViewController: BaseViewController {
         self.title = NSLocalizedString("Navigation")
         
         let layout = V2LeftAlignedCollectionViewFlowLayout();
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15);
+        layout.sectionInset = UIEdgeInsetsMake(10, 15, 10, 15);
         self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout)
         self.collectionView!.dataSource = self
         self.collectionView!.delegate = self
         self.view.addSubview(self.collectionView!)
         
         self.collectionView!.register(NodeTableViewCell.self, forCellWithReuseIdentifier: "cell")
-        self.collectionView!.register(NodeCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "nodeGroupNameView")
+        self.collectionView!.register(NodeCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "nodeGroupNameView")
     
         NodeGroupModel.getNodes { (response) -> Void in
             if response.success {
@@ -32,7 +32,7 @@ class NodesViewController: BaseViewController {
             self.hideLoadingView()
         }
         self.showLoadingView()
-        
+
         self.themeChangedHandler = {[weak self] _ in
             self?.view.backgroundColor = V2EXColor.colors.v2_backgroundColor
             self?.collectionView?.backgroundColor = V2EXColor.colors.v2_CellWhiteBackgroundColor
